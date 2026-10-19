@@ -62,3 +62,22 @@ The scheduled health check detected the failure, restarted the service, and reco
 - Add recovery retry limits and alert notifications.
 - Improve process identification and service management.
 - Integrate CloudWatch monitoring and alarms.
+
+## Recovery Test Results
+
+The self-healing mechanism was tested by deliberately stopping
+the Python HTTP server.
+
+Observed results:
+- Failure detected by the scheduled health check.
+- Automatic recovery attempted by the Bash script.
+- Service restarted successfully.
+- Subsequent health check confirmed that the service was healthy.
+
+Example log output:
+
+```text
+UNHEALTHY: Web service is not responding.
+Attempting automatic recovery...
+RECOVERY SUCCESS: Web service restarted.
+HEALTHY: Web service is responding.
