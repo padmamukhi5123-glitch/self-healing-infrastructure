@@ -1,0 +1,21 @@
+---
+- name: Recover self-healing web service
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Restart the self-healing web service
+      ansible.builtin.shell: |
+        pkill -f '^python3 -m http.server 8080 --directory /home/ubuntu/self-healing-infrastructure/app$' || true
+        sleep 2
+        nohup python3 -m http.server 8080 \
+          --directory /home/ubuntu/self-healing-infrastructure/app \
+          > /home/ubuntu/self-healing-infrastructure/logs/service.log 2>&1 \
+          < /dev/null &
+        sleep 2
+        curl -fsS --max-time 3 http://localhost:8080/ >/dev/null
+      args:
+        executable: /bin/bash
+      changed_when: true

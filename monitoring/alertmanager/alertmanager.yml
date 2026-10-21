@@ -1,0 +1,15 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  receiver: ansible-webhook
+  group_by: ["alertname"]
+  group_wait: 5s
+  group_interval: 30s
+  repeat_interval: 5m
+
+receivers:
+  - name: ansible-webhook
+    webhook_configs:
+      - url: "http://host.docker.internal:5001/alerts"
+        send_resolved: false
